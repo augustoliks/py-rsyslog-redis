@@ -8,7 +8,7 @@
     :target: https://codecov.io/gh/augustoliks/py-rsyslog-redis
 
 .. image:: https://travis-ci.com/augustoliks/py-rsyslog-redis.svg?branch=main
-    :target: https://travis-ci.com/github/augustoliks/py-rsyslog-redis
+    :target: https://travis-ci.com/github/augustoliks/py-redis-rsyslog-extension
 
 py-rsyslog-redis
 ================
