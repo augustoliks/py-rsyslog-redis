@@ -10,8 +10,3 @@ Welcome to py-rsyslog-redis's documentation!
     :caption: Source-Code Docs
 
     files/source-code.rst
-
-.. toctree::
-    :caption: Release-Notes
-
-    files/RELEASE-NOTES.rst
