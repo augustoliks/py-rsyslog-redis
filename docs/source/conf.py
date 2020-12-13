@@ -12,7 +12,9 @@
 #
 from pathlib import Path
 import sys
-source_code_path = str(Path('..', '../', 'pyrsyslogredis').resolve())
+
+root_path = Path('..', '..')
+source_code_path = str(Path(root_path, 'pyrsyslogredis').resolve())
 sys.path.insert(0, source_code_path)
 
 # -- Project information -----------------------------------------------------
