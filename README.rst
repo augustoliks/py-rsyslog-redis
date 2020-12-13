@@ -15,3 +15,17 @@ py-rsyslog-redis
 ================
 
 Rsyslog *omprog* plugin, propagate message logs for python instance. Rsylog (action) > Python (readlines) > Redis (pubsub channel)
+
+
+
+Setup
+-----
+
+.. code-block:: bash
+
+    mkdir -p /opt/pyrsyslogredis/
+    cd /opt/pyrsyslogredis/
+    git clone https://github.com/augustoliks/py-rsyslog-redis/
+    virtualenv venv
+    ./venv/bin/pip3 install redis
+    cp py-rsyslog-redis/examples/30-pyrsyslogredis.conf /etc/rsyslog.d/
