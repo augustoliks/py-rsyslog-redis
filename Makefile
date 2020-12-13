@@ -1,7 +1,7 @@
 test:
 	poetry build
 	poetry install
-	poetry run pytest --cov=pyrsyslogredis tests/
+	export TEST_PY_RSYSLOG_REDIS=true; poetry run pytest --cov=pyrsyslogredis tests/
 
 sphinx:
 	mkdir -p docs/source/files

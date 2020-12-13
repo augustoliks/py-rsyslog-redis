@@ -122,4 +122,5 @@ def main():
     on_exit()
 
 
-main()
+if not os.getenv('TEST_PY_RSYSLOG_REDIS'):
+    main()
