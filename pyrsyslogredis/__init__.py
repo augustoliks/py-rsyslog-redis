@@ -1,4 +1,5 @@
-"""Rsyslog *omprog* plugin
+"""
+    Rsyslog *omprog* plugin
 
     Propagate message logs for python instance.
     Rsylog (action) > Python (readlines) > Redis (pubsub channel)
@@ -22,14 +23,15 @@ REDIS_PORT = int(os.getenv('RSYSLOG_PYTHON_REDIS_PORT', 6379))
 
 
 def on_init() -> redis.Redis:
-    """Connect Redis
+    """
+    Connect Redis
 
-        Apart from processing the logs received from rsyslog, you want your plugin
-        to be able to report its own logs in some way. This will facilitate
-        diagnosing problems and debugging your code. Here we set up the standard
-        Python logging system to output the logs to stderr. In the rsyslog
-        configuration, you can configure the 'omprog' action to capture the stderr
-        of your plugin by specifying the action's "output" parameter.
+    Apart from processing the logs received from rsyslog, you want your plugin
+    to be able to report its own logs in some way. This will facilitate
+    diagnosing problems and debugging your code. Here we set up the standard
+    Python logging system to output the logs to stderr. In the rsyslog
+    configuration, you can configure the 'omprog' action to capture the stderr
+    of your plugin by specifying the action's "output" parameter.
 
     Raises:
         Exception: If redis connection error occurs.
@@ -49,9 +51,10 @@ def on_init() -> redis.Redis:
 
 
 def on_processed(log_raw: str) -> Tuple[str, str]:
-    """Process one log message received from rsyslog
+    """
+    Process one log message received from rsyslog
 
-        If this function raises an error, the message will be retried by rsyslog.
+    If this function raises an error, the message will be retried by rsyslog.
 
     Args:
         log_raw: the log message. Does NOT include a trailing newline.
@@ -76,13 +79,14 @@ def on_send(redis_connection: redis.Redis, channel: str, log: str):
 
 
 def on_exit():
-    """notify rsyslog success
+    """
+    notify rsyslog success
 
-        Do everything that is needed to finish processing (e.g. close files,
-        handles, disconnect from systems...). This is being called immediately
-        before exiting.
-        This function should not raise any error. If it does, the error will be
-        logged as a warning and ignored.
+    Do everything that is needed to finish processing (e.g. close files,
+    handles, disconnect from systems...). This is being called immediately
+    before exiting.
+    This function should not raise any error. If it does, the error will be
+    logged as a warning and ignored.
     """
     logging.debug("on_exit called")
     print("OK", flush=True)
@@ -90,13 +94,14 @@ def on_exit():
 
 
 def receive_log_from_rsyslog() -> str:
-    """receive log from rsyslog action omprog
+    """
+    receive log from rsyslog action omprog
 
-        Any line written to stdout that is not a status code will be
-        treated as a recoverable error by 'omprog', and cause the action
-        to be temporarily suspended. In this skeleton, we simply return
-        a one-line representation of the Python exception. (If debugging
-        is enabled in rsyslog, this line will appear in the debug logs.)
+    Any line written to stdout that is not a status code will be
+    treated as a recoverable error by 'omprog', and cause the action
+    to be temporarily suspended. In this skeleton, we simply return
+    a one-line representation of the Python exception. (If debugging
+    is enabled in rsyslog, this line will appear in the debug logs.)
     """
     line = sys.stdin.readline()
     return line
