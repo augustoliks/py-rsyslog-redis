@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "pyrsyslogredis"
+version = "0.1.0"
+description = "Rsyslog omprog plugin, propagate message logs for python instance. Rsylog (action) > Python (readlines) > Redis (pubsub channel)"
+authors = ["augustoliks <carlos.neto.dev@gmail.com>"]
+
+
+[tool.poetry.dependencies]
+python = "^3.7"
+redis = "^3.5.3"
+
+[tool.poetry.scripts]
+py-rsyslog-redis = "pyrsyslogredis:main"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.0"
+pytest-cov = "^2.10.1"
+sphinx = "^3.3.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
