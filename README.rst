@@ -1,5 +1,5 @@
 .. image:: https://readthedocs.org/projects/py-rsyslog-redis/badge/?version=latest
-    :target: https://py-rsyslog-redis.readthedocs.io/en/latest/?badge=latest
+    :target: https://py-rsyslog-redis.readthedocs.io/en/latest/index.html
     :alt: Documentation Status
 
 .. image:: https://app.codacy.com/project/badge/Grade/2622e60889dc4d649f3c35b06935549b
