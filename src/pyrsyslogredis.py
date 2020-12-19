@@ -1,6 +1,5 @@
 """
     Rsyslog *omprog* plugin
-
     Propagate message logs for python instance.
     Rsylog (action) > Python (readlines) > Redis (pubsub channel)
 """
@@ -11,28 +10,35 @@ import os
 import logging
 import json
 from typing import Tuple
+from pathlib import Path
 
+
+app_path = Path(__file__).parent
+
+
+try:
+    settings  = json.loads(Path(app_path, 'settings.json').read_text())['pyrsyslogredis']
+except Exception as e:
+    logging.exception(f'erro ao ler arquivo de configuracao {e}')
+    settings = {}
 
 logging.basicConfig(
     stream=sys.stderr,
-    level=os.getenv('RSYSLOG_PYTHON_REDIS_LOG_LEVEL', 'WARNING'),
+    level=settings.get('PLUGIN_LOG_LEVEL', 'WARNING'),
     format='%(asctime)s %(levelname)s %(message)s'
 )
-REDIS_ADDRESS: str = os.getenv('RSYSLOG_PYTHON_REDIS_ADDRESS', '127.0.0.1')
-REDIS_PORT = int(os.getenv('RSYSLOG_PYTHON_REDIS_PORT', 6379))
 
 
 def on_init() -> redis.Redis:
     """
     Connect Redis
-
+    
     Apart from processing the logs received from rsyslog, you want your plugin
     to be able to report its own logs in some way. This will facilitate
     diagnosing problems and debugging your code. Here we set up the standard
     Python logging system to output the logs to stderr. In the rsyslog
     configuration, you can configure the 'omprog' action to capture the stderr
     of your plugin by specifying the action's "output" parameter.
-
     Raises:
         Exception: If redis connection error occurs.
     """
@@ -42,8 +48,8 @@ def on_init() -> redis.Redis:
     print("OK", flush=True)
 
     redis_connection = redis.Redis(
-        host=REDIS_ADDRESS,
-        port=REDIS_PORT,
+        host=settings.get('REDIS_ADDRESS', '127.0.0.1'),
+        port=settings.get('REDIS_PORT', 6379),
         db=0
     )
 
@@ -53,9 +59,7 @@ def on_init() -> redis.Redis:
 def on_processed(log_raw: str) -> Tuple[str, str]:
     """
     Process one log message received from rsyslog
-
     If this function raises an error, the message will be retried by rsyslog.
-
     Args:
         log_raw: the log message. Does NOT include a trailing newline.
     Raises:
@@ -64,8 +68,9 @@ def on_processed(log_raw: str) -> Tuple[str, str]:
         Exception: If a non-recoverable error occurs. The plugin will be
             restarted before retrying the message.
     """
-    logging.debug("on_message called")
+    logging.debug("on_processed called")
 
+    logging.debug(log_raw)
     log_gelf_format = json.loads(log_raw)
 
     redis_channel = log_gelf_format['application']
@@ -90,13 +95,11 @@ def on_exit():
     """
     logging.debug("on_exit called")
     print("OK", flush=True)
-    sys.exit(0)
 
 
 def receive_log_from_rsyslog() -> str:
     """
     receive log from rsyslog action omprog
-
     Any line written to stdout that is not a status code will be
     treated as a recoverable error by 'omprog', and cause the action
     to be temporarily suspended. In this skeleton, we simply return
@@ -114,25 +117,27 @@ def main():
         logging.exception(f"Initialization error, exiting program | {e}")
         sys.exit(1)
 
-    try:
+    log_raw = receive_log_from_rsyslog()
+
+    while log_raw:
+        log_raw = log_raw.rstrip('\n')
+
+        try:
+            redis_channel, log_processed = on_processed(log_raw)
+        except Exception as e:
+            logging.exception(e)
+            sys.exit(1)
+
+        try:
+            on_send(redis_connection, redis_channel, log_processed)
+        except Exception as e:
+            logging.exception(e)
+            sys.exit(1)
+
+        on_exit()
         log_raw = receive_log_from_rsyslog()
-    except Exception as e:
-        logging.exception(e)
-        sys.exit(1)
 
-    try:
-        redis_channel, log_processed = on_processed(log_raw)
-    except Exception as e:
-        logging.exception(e)
-        sys.exit(1)
-
-    try:
-        on_send(redis_connection, redis_channel, log_processed)
-    except Exception as e:
-        logging.exception(e)
-        sys.exit(1)
-
-    on_exit()
+    sys.exit(0)
 
 
 if not os.getenv('TEST_PY_RSYSLOG_REDIS'):
