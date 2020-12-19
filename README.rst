@@ -8,8 +8,8 @@
 .. image:: https://codecov.io/gh/augustoliks/py-rsyslog-redis/branch/main/graph/badge.svg?token=EHJKGJKW3T
     :target: https://codecov.io/gh/augustoliks/py-rsyslog-redis
 
-.. image:: https://travis-ci.com/augustoliks/py-redis-rsyslog-extension.svg?branch=main
-    :target: https://travis-ci.com/augustoliks/py-redis-rsyslog-extension
+.. image:: https://travis-ci.com/augustoliks/py-rsyslog-redis.svg?branch=main
+    :target: https://travis-ci.com/github/augustoliks/py-rsyslog-redis
 
 py-rsyslog-redis
 ================
