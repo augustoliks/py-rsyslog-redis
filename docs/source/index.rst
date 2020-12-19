@@ -7,6 +7,6 @@ Welcome to py-rsyslog-redis's documentation!
     files/README.rst
 
 .. toctree::
-    :caption: Source-Code Docs
+    :caption: Source-Code
 
     files/source-code.rst
