@@ -14,7 +14,7 @@ from pathlib import Path
 import sys
 
 root_path = Path('..', '..')
-source_code_path = str(Path(root_path, 'pyrsyslogredis').resolve())
+source_code_path = str(Path(root_path, 'src').resolve())
 sys.path.insert(0, source_code_path)
 
 # -- Project information -----------------------------------------------------
@@ -30,7 +30,8 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
     'sphinx.ext.napoleon',
-    'sphinx_rtd_theme'
+    'sphinx_rtd_theme',
+    'sphinx_search.extension'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

@@ -38,5 +38,5 @@ Setup
     git clone https://github.com/augustoliks/py-rsyslog-redis/
     cd /opt/py-rsyslog-redis/
     virtualenv venv
-    ./venv/bin/pip3 install redis
+    ./venv/bin/pip3 install src/requirements.txt
     cp rsyslog-config/30-pyrsyslogredis.conf /etc/rsyslog.d/
